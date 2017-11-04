@@ -1,15 +1,28 @@
 <?php
 namespace FrontBundle\Twitter\Stream;
 
+use FrontBundle\EntityManager\StreamRequestManager;
 use OauthPhirehose;
-use function dump;
 
 class Consumer extends OauthPhirehose
 {
+    /**
+     * @var StreamRequestManager 
+     */
+    protected $streamRequestManager;
+    
     public function enqueueStatus($status)
     {
-        //TODO: Throw an event with the tweet
-        $data = json_decode($status, true);
-        dump(date("Y-m-d H:i:s (").strlen($status)."):".print_r($data,true)."\n");
+        $this->streamRequestManager->saveStreamRequest($status);
+    }
+    
+    public function getStreamRequestManager() : StreamRequestManager
+    {
+        return $this->streamRequestManager;
+    }
+    
+    public function setStreamRequestManager(StreamRequestManager $streamRequestManager)
+    {
+        $this->streamRequestManager = $streamRequestManager;
     }
 }

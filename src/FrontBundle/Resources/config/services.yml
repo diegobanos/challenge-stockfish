@@ -1,6 +1,8 @@
 services:
     front.stream_reader:
         class: FrontBundle\Twitter\Stream\Reader
-        arguments: [%consumer_key%, %consumer_secret%, %oauth_token%, %oauth_secret%, '%chess_account%']
-            
-            
+        arguments: [%consumer_key%, %consumer_secret%, %oauth_token%, %oauth_secret%, '%chess_account%', '@front.stream_request_manager']
+        
+    front.stream_request_manager:
+        class: FrontBundle\EntityManager\StreamRequestManager
+        arguments: ['@doctrine.orm.entity_manager']

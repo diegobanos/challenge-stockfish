@@ -11,11 +11,10 @@ class TwitterStreamCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-          ->setName('stream:start')
-          ->setDescription('Starts reading the Twitter Stream')
-          ->setHelp('This command will start reading the Twitter Stream')
+            ->setName('stream:start')
+            ->setDescription('Starts reading the Twitter Stream')
+            ->setHelp('This command will start reading the Twitter Stream')
         ;
-        
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
