@@ -1,4 +1,20 @@
-services:
+services:    
+    front.game_manager:
+        class: FrontBundle\EntityManager\GameManager
+        arguments: ['@doctrine.orm.entity_manager', '@front.player_manager']
+        tags:
+            - { name: kernel.event_listener, event: status.new, priority: 254 }
+            
+    front.player_manager:
+        class: FrontBundle\EntityManager\PlayerManager
+        arguments: ['@doctrine.orm.entity_manager']
+        tags:
+            - { name: kernel.event_listener, event: status.new, priority: 255 }
+    
+    front.request_processor:
+        class: FrontBundle\StreamRequest\Processor
+        arguments: ['@front.stream_request_manager', '@event_dispatcher']
+    
     front.stream_reader:
         class: FrontBundle\Twitter\Stream\Reader
         arguments: [%consumer_key%, %consumer_secret%, %oauth_token%, %oauth_secret%, '%chess_account%', '@front.stream_request_manager']

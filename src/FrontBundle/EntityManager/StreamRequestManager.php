@@ -12,13 +12,29 @@ class StreamRequestManager
      */
     protected $em;
     
+    /**
+     * @var EntityRepository 
+     */
+    protected $streamRequestRepository;
+    
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
+        $this->streamRequestRepository = $em->getRepository(StreamRequest::class);
+    }
+    
+    public function findStreamRequestById(int $id)
+    {
+        return $this->streamRequestRepository->find($id);
+    }
+    
+    public function findUnprocessedStreamRequests()
+    {
+        return $this->streamRequestRepository->findBy(['processed' => false]);
     }
     
     //NOTE: Ideally it would receive a StreamRequest already built
-    public function saveStreamRequest(string $status, bool $andFlush = true)
+    public function saveStreamRequest(string $status)
     {
         $streamRequest = new StreamRequest;
         
@@ -29,10 +45,14 @@ class StreamRequestManager
         ;
         
         $this->em->persist($streamRequest);
+        $this->em->flush();
+    }
+    
+    public function markRequestAsProcessed(StreamRequest $request)
+    {
+        $request->setProcessed(true);
         
-        if ($andFlush) {
-            $this->em->flush();
-        }
+        $this->em->merge($request);
+        $this->em->flush();
     }
 }
-
